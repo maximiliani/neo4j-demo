@@ -1,0 +1,19 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Neo4j demo with Spring Boot
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Maximilian
+    family-names: Inckmann
+    email: maximilian.inckmann@kit.edu
+    affiliation: Karlsruhe Institute for Technology
+    orcid: 'https://orcid.org/0009-0005-2800-4833'
+repository-code: 'https://github.com/maximiliani/neo4j-demo'
+url: 'https://github.com/maximiliani/idoris'
+license: Apache-2.0
