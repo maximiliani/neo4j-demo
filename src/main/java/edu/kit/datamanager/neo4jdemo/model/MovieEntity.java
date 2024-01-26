@@ -30,10 +30,14 @@ public class MovieEntity {
     private final String title;
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
     @Property("tagline")
     @Setter
     private String tagline;
+
+    @Property("released")
+    @Setter
+    private Integer released;
 
     @Relationship(type = "ACTED_IN", direction = Direction.INCOMING)
     @Setter

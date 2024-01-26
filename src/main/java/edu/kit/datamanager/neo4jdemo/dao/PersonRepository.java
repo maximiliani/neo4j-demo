@@ -23,46 +23,20 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "persons", path = "persons"
 //        , excerptProjection = PersonRepository.MinimalPersonView.class
 )
 public interface PersonRepository extends Neo4jRepository<PersonEntity, Long>, CrudRepository<PersonEntity, Long> {
-    PersonEntity findOneByName(String name);
+    Optional<PersonEntity> findOneByName(String name);
 
     @Query("MATCH (p:Person)-[a:ACTED_IN]->(m:Movie) where any(role IN a.roles WHERE role CONTAINS $name) RETURN p,a,m\n")
-    List<PersonEntity> findByRoleName(String name);
-
-    void deleteByName(String name);
+    Iterable<PersonEntity> findByRoleName(String name);
 
     @Query("match p=shortestPath((p1:Person{name:$name1})-[*]-(p2:Person{name:$name2})) return p")
-    List<PersonEntity> findSingleConnectionBetweenPersons(@Param("name1") String name1, @Param("name2") String name2);
+    Iterable<PersonEntity> findSingleConnectionBetweenPersons(@Param("name1") String name1, @Param("name2") String name2);
 
     @Query("match p=allShortestPaths((p1:Person{name:$name1})-[*]-(p2:Person{name:$name2})) return p")
-    List<PersonEntity> findAllConnectionsBetweenPersons(@Param("name1") String name1, @Param("name2") String name2);
-
-//    @Projection(name = "fullPersonView", types = {PersonEntity.class})
-//    interface PersonView extends MinimalPersonView {
-//        List<PersonEntity> getFollowedBy();
-//
-//        List<PersonEntity> getFollows();
-//
-//        List<Roles> getActedIn();
-//
-//        List<MovieEntity> getDirected();
-//
-//        List<MovieEntity> getProduced();
-//
-//        List<MovieEntity> getWrote();
-//
-//        List<Reviews> getReviewed();
-//    }
-
-//    @Projection(name = "minimalPersonView", types = {PersonEntity.class})
-//    interface MinimalPersonView {
-//        String getName();
-//
-//        Integer getBorn();
-//    }
+    Iterable<PersonEntity> findAllConnectionsBetweenPersons(@Param("name1") String name1, @Param("name2") String name2);
 }

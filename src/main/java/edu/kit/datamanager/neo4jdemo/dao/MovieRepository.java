@@ -23,16 +23,18 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "movies", path = "movies"
 //        , excerptProjection = MovieRepository.MinimalMovieView.class
 )
 public interface MovieRepository extends Neo4jRepository<MovieEntity, Long>, CrudRepository<MovieEntity, Long> {
-    MovieEntity findOneByTitle(String title);
+    Optional<MovieEntity> findOneByTitle(String title);
+
+    Iterable<MovieEntity> findAllByReleased(Integer year);
 
     @Query("MATCH (m:Movie)<-[a:ACTED_IN]-(p:Person) WHERE p.name = $name MATCH (m:Movie)<-[d:DIRECTED]-(p2:Person) RETURN m")
-    List<MovieEntity> findAllByActorName(String name);
+    Iterable<MovieEntity> findAllByActorName(String name);
 
     @Query("MATCH p=shortestPath(\n"
             + "(bacon:Person {name: $person1})-[*]-(meg:Person {name: $person2}))\n"
@@ -41,7 +43,7 @@ public interface MovieRepository extends Neo4jRepository<MovieEntity, Long>, Cru
             + "MATCH (m) <-[r:DIRECTED]-(d:Person)\n"
             + "RETURN p, collect(r), collect(d)"
     )
-    List<MovieEntity> findAllOnShortestPathBetween(@Param("person1") String person1, @Param("person2") String person2);
+    Iterable<MovieEntity> findAllOnShortestPathBetween(@Param("person1") String person1, @Param("person2") String person2);
 
     @Query("MATCH p=allShortestPaths(\n"
             + "(p1:Person {name: $person1})-[*]-(p2:Person {name: $person2}))\n"
@@ -50,25 +52,5 @@ public interface MovieRepository extends Neo4jRepository<MovieEntity, Long>, Cru
             + "MATCH (m) <-[r:DIRECTED]-(d:Person)\n"
             + "RETURN p, collect(r), collect(d)"
     )
-    List<MovieEntity> findAllOnAllShortestPathBetween(@Param("person1") String person1, @Param("person2") String person2);
-
-//    @Projection(name = "fullMovieView", types = {MovieEntity.class})
-//    interface MovieView extends MinimalMovieView {
-//        List<Roles> getActors();
-//
-//        List<PersonEntity> getDirectors();
-//
-//        List<PersonEntity> getProducers();
-//
-//        List<PersonEntity> getWriters();
-//
-//        List<Reviews> getReviewers();
-//    }
-//
-//    @Projection(name = "minimalMovieView", types = {MovieEntity.class})
-//    interface MinimalMovieView {
-//        String getTitle();
-//
-//        String getTagline();
-//    }
+    Iterable<MovieEntity> findAllOnAllShortestPathBetween(@Param("person1") String person1, @Param("person2") String person2);
 }

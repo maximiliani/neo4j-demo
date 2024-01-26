@@ -1,0 +1,38 @@
+type Query{
+    allMovies: [Movie]
+    movieById(id: ID): Movie
+    movieByTitle(title: String): Movie
+    moviesByYear(year: Int): [Movie]
+    moviesByActor(name: String): [Movie]
+}
+
+type Movie{
+    id: ID
+    title: String
+    tagline: String
+    released: Int
+    actors: [Roles]
+    directors: [Person]
+    producers: [Person]
+    writers: [Person]
+    reviews: [Review]
+}
+
+type Roles {
+    id: ID
+    actor: Person
+    roles: [String]
+}
+
+type Review{
+    id: ID
+    rating: Int
+    summary: String
+    reviewer: Person
+}
+
+type Person{
+    id: ID
+    name: String
+    born: Int
+}
